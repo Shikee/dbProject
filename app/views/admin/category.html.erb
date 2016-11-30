@@ -1,0 +1,7 @@
+<h1>Admin#category</h1>
+<p>Find me in app/views/admin/category.html.erb</p>
+<%= link_to "카테고리 만들기", new_category_path %><br>
+<h1>카테고리 삭제하기</h1>
+<% @categories.each do |a|%>
+  <%= link_to a.name, a, method: :delete, data: { confirm: 'Are you sure?' }%><br>
+<%end%>

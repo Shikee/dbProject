@@ -1,0 +1,26 @@
+
+<%= form_for(mentorgroup) do |f| %>
+  <% if mentorgroup.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(mentorgroup.errors.count, "error") %> prohibited this mentorgroup from being saved:</h2>
+
+      <ul>
+      <% mentorgroup.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :name,required: true %><br />
+    <%= f.text_field :name, autofocus: true %>
+  </div>
+  <div class="field">
+    <%= f.label :category_id,required: true %><br />
+    <%= f.text_field :category_id, autofocus: true %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

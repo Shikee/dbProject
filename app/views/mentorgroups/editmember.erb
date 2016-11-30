@@ -1,0 +1,34 @@
+<p>Member List, click to delete</p>
+<% if @members != nil%>
+  <%@members.each do |a|%>
+    <%= button_to a.user.name, destroymember_mentorgroup_path(a.id), :method => :delete %></br>
+  <%end%>
+<%end%>
+<%= form_for(@workfor, :url => updatemember_mentorgroup_path) do |f| %>
+  <% if @mentorgroup.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(mentorgroup.errors.count, "error") %> prohibited this mentorgroup from being saved:</h2>
+      <ul>
+      <% mentorgroup.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+    <div class="field">
+      <%= f.label :user_id,required: true %><br />
+      <%= f.text_field :user_id, autofocus: true %>
+    </div>
+    <div class="field">
+      <%= f.hidden_field :mentorgroup_id, :value => params[:id]%>
+    </div>
+    <div class="actions">
+      <%= f.submit %>
+    </div>
+<%end%>
+
+<p>User list</p>
+<%@user.each do |a|%>
+  <%=a.id%> <%=a.name%></br>
+<%end%>

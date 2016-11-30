@@ -1,0 +1,88 @@
+<section id="main">
+  <div class="inner">
+    <p id="notice"><%= notice %></p>
+
+    <h1><%=@question.title%></h1>
+    <p ><%= raw @question.content%></p>
+     <%= rating_for @question, "coolness", :enable_half => false, disable_after_rate: true, imdb_avg: true %>
+
+
+     <p><%= @question.hevals.count %>개의 100점제 평가</p>
+     <% @question.hevals.each do |a|%>
+        <p><%=  a.question1 %></p>
+        <p><%=  a.question2 %></p>
+        <p><%= raw a.question3 %></p>
+     <%end%>
+
+    <p><%= @question.answers.count %>개의 답변</p>
+    <% @question.answers.each do |a|%>
+      <p><%= raw a.content %></p>
+      <%= rating_for a, "coolness", :enable_half => false, disable_after_rate: true, imdb_avg: true%>
+    <%end%>
+
+    <%if user_signed_in?%>
+      <%if @is_mentor == true %>
+        <%= form_for [@question, @question.hevals.new] do |f| %>
+          <h5>멘토님, 백점제 평가를 해주세요.</h5>
+          <div class="field">
+            <%= f.label :question1,required: true %><br />
+           <%= f.radio_button(:question1, 1) %>
+           <%= f.label :question1_1, '1'%>
+           <%= f.radio_button(:question1, 2) %>
+           <%= f.label :question1_2, '2'%>
+           <%= f.radio_button(:question1, 3) %>
+           <%= f.label :question1_3, '3'%>
+           <%= f.radio_button(:question1, 4) %>
+           <%= f.label :question1_4, '4'%>
+           <%= f.radio_button(:question1, 5) %>
+           <%= f.label :question1_5, '5'%>
+
+
+          </div>
+          <div class="field">
+            <%= f.label :question2,required: true %><br />
+            <%= f.radio_button(:question2, 1) %>
+            <%= f.label :question2_1, '1'%>
+            <%= f.radio_button(:question2, 2) %>
+            <%= f.label :question2_2, '2'%>
+            <%= f.radio_button(:question2, 3) %>
+            <%= f.label :question2_3, '3'%>
+            <%= f.radio_button(:question2, 4) %>
+            <%= f.label :question2_4, '4'%>
+            <%= f.radio_button(:question2, 5) %>
+            <%= f.label :question2_5, '5'%>
+
+
+          </div>
+          <div class="field">
+            <%= f.label :question3,required: true %><br />
+            <%= f.cktext_area :question3, class:"tinymce" %>
+          </div>
+          <div class="btn-group">
+            <%= f.submit "작성하기", class: 'btn-lightgreen' %>
+          </div>
+        <%end%>
+      <%else%>
+        <%= form_for [@question, @question.answers.new] do |f| %>
+          <h5>당신의 답변을 달아주세요!</h5>
+          <div class="field">
+            <%= f.cktext_area :content, class:"tinymce" %>
+          </div>
+          <div class="btn-group">
+            <%= f.submit "작성하기", class: 'btn-lightgreen' %>
+          </div>
+        <%end%>
+    <% end %>
+
+
+
+    <%end%>
+
+    <%if user_signed_in?%>
+      <%if @question.user.id == current_user.id%>
+        <%= link_to 'Edit', edit_category_question_path(params[:category_id],params[:id]) %> |
+        <%= link_to 'Back', category_path(params[:category_id]) %>
+      <%end%>
+    <%end%>
+  </div>
+</section>

@@ -1,0 +1,2 @@
+class Qeval < ApplicationRecord
+end

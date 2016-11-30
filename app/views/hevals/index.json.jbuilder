@@ -1,0 +1,1 @@
+json.array! @hevals, partial: 'hevals/heval', as: :heval

@@ -1,0 +1,2 @@
+class Aeval < ApplicationRecord
+end

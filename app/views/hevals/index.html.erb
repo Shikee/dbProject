@@ -1,0 +1,25 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Hevals</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @hevals.each do |heval| %>
+      <tr>
+        <td><%= link_to 'Show', heval %></td>
+        <td><%= link_to 'Edit', edit_heval_path(heval) %></td>
+        <td><%= link_to 'Destroy', heval, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Heval', new_heval_path %>

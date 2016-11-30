@@ -1,0 +1,12 @@
+<section id="main">
+  <div class="inner">
+    <%if @questions != nil%>
+        <%@questions.each do |a|%>
+            <%=link_to a.title, category_question_path(params[:id],a.id)%></br>
+        <%end%>
+    <%end%>
+    <%if user_signed_in?%>
+    <%= link_to "새로운 질문 하러가기", new_category_question_path(params[:id])%>
+    <%end%>
+  </div>
+</section>

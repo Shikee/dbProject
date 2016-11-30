@@ -1,0 +1,37 @@
+<section id="main">
+  <div class="inner">
+    <div class="table-wrapper">
+    <% if @super !=nil%>
+      <h4>  Super Mentor : <%= @super.nickname+"("+@super.email+")"%></h4>
+    <%else%>
+      <h4> Super Mentor : 현재 공석입니다. 관리자가 권한을 가지고 있습니다.</h4>
+    <%end%>
+
+    <h4>  Members of the group</h4>
+      <table>
+        <thead>
+          <tr>
+            <th>Index</th>
+            <th>Member Id</th>
+            <th>Member Nickname</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if @members != nil%>
+            <%@members.each_with_index do |a,b|%>
+              <tr>
+                <td><%=b+1%></td>
+                <td><%= a.user.id%></td>
+                <td><%= a.user.nickname%></td>
+              </tr>
+            <% end %>
+          <%end%>
+        </tbody>
+      </table>
+    </div>
+    <%if current_user.is_admin?%>
+    <%= link_to 'Edit', edit_mentorgroup_path(@mentorgroup) %> |
+    <%end%>
+    <%= link_to 'Back', mentorgroups_path %>
+  </div>
+</section>

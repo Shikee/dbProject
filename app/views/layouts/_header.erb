@@ -1,0 +1,17 @@
+<header id="header">
+  <div class="inner">
+    <%= link_to "YonseiOverFlow", root_path,:class => "logo"%>
+
+    <%= link_to "HOME", root_path%>
+    <%if user_signed_in?%>
+      <%= link_to "회원정보 수정",edit_user_registration_path %>
+    <%else%>
+        <%= link_to "로그인", new_user_session_path %>
+    <%end%>
+    <%if user_signed_in?%>
+        <%= link_to "로그아웃", destroy_user_session_path, :method => :delete%>
+    <%else%>
+        <%= link_to "회원가입", new_user_registration_path %>
+    <%end%>
+  </div>
+</header>

@@ -1,0 +1,32 @@
+
+  <%if current_user.is_admin == true%>
+    <p>current Super list(버튼을 눌러 수퍼멘토 삭제)</p>
+    <% if @current_super != "now empty"%>
+      <%= button_to @current_super.name, destroysuper_mentorgroup_path(params[:id]), :method => :delete %></br>
+      <%= @current_super.name%>
+    <%end%>
+    <p>User list</p>
+    <%@user.each do |a|%>
+      id : <%=a.id%>, 이름 : <%=a.name%></br>
+    <%end%>
+    </br>
+    <%= form_for(@mentorgroup, :url => updatesuper_mentorgroup_path) do |f| %>
+      <% if @mentorgroup.errors.any? %>
+        <div id="error_explanation">
+          <h2><%= pluralize(mentorgroup.errors.count, "error") %> prohibited this mentorgroup from being saved:</h2>
+          <ul>
+          <% mentorgroup.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+          </ul>
+        </div>
+      <% end %>
+      <div class="field">
+        <%= f.label :user_id, "User ID를 입력해주세요" ,required: true %><br />
+        <%= f.text_field :user_id, autofocus: true %>
+      </div>
+      <div class="actions">
+        <%= f.submit %>
+      </div>
+    <%end%>
+  <%end%>

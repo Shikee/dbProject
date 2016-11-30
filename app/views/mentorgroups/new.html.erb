@@ -1,0 +1,7 @@
+<h1>New Mentorgroup</h1>
+<% @categories.each do |a|%>
+  <%=a.id%> = <%=a.name%></br>
+<%end%>
+<%= render 'form', mentorgroup: @mentorgroup %>
+
+<%= link_to 'Back', mentorgroups_path %>
