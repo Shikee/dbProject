@@ -1,5 +1,10 @@
 class QuestionsController < ApplicationController
   before_action :set_question, only: [:show, :edit, :update, :destroy]
+  before_action :can_qeval, only: [:show, :edit, :update, :destroy]
+  before_action :set_qeval, only: [:show]
+  before_action :set_qeval_info, only: [:show]
+  before_action :set_category, only: [:show]
+
   # GET /questions
   # GET /questions.json
   # def index
@@ -8,21 +13,39 @@ class QuestionsController < ApplicationController
 
   # GET /questions/1
   # GET /questions/1.json
+  def index
+    if params[:sort] =="qpoint"
+      @questions = Question.sorted_by_qpoint
+    elsif params[:sort] =="category_name"
+      @questions = Question.sorted_by_category_name
+    elsif params[:sort] =="caneval"
+      @questions = Question.sorted_by_caneval
+    else
+      @questions = Question.order(params[:sort])
+    end
+  end
   def show
     @is_mentor = false
-    current_user.WorksFor.each do |a|
-      if(  Mentorgroup.find(a.mentorgroup_id).category_id.to_i == params[:category_id].to_i)
-        @is_mentor = true
+    @is_super = false
+    if(current_user !=nil)
+      current_user.WorksFor.each do |a|
+        if(  Mentorgroup.find(a.mentorgroup_id).category_id.to_i == params[:category_id].to_i)
+          @is_mentor = true
+        end
+      end
+      mentorgroups = Mentorgroup.where(category_id: params[:category_id])
+      mentorgroups.each do |a|
+        if(a.user_id.to_i == current_user.id.to_i)
+          @is_super = true
+        end
       end
     end
-
   end
 
   # GET /questions/new
   def new
     @category = Category.find_by_id(params[:category_id])
     @question = @category.questions.build
-
   end
   # GET /questions/1/edit
   def edit
@@ -37,6 +60,7 @@ class QuestionsController < ApplicationController
     @question.user_id = current_user.id
     @question.category_id = params[:category_id]
       if @question.save
+        current_user.increment!(:question_count,1)
         redirect_to category_question_path(params[:category_id],@question.id), notice: 'Question was successfully created.'
       else
         render :new
@@ -57,19 +81,57 @@ class QuestionsController < ApplicationController
   # DELETE /questions/1.json
   def destroy
     @question.destroy
-    respond_to do |format|
-      redirect_to questions_url, notice: 'Question was successfully destroyed.'
-    end
+    current_user.decrement!(:question_count,1)
+
+      redirect_to category_path, notice: 'Question was successfully destroyed.'
+
   end
+
+  def aq
+    mentorgroups = Mentorgroup.where(category_id: params[:category_id])
+    @question = Question.find(params[:question_id])
+    @user = Mentorgroup.find(@mt).WorksFor
+    @assign = Assign.where(question_id: params[:question_id]).where(mentorgroup_id: @mt)
+  end
+  def adminaq
+    @mentorgroups = Mentorgroup.where(category_id: params[:category_id])
+    @question = Question.find(params[:question_id])
+    @assign = Assign.where(question_id: params[:question_id])
+  end
+
+
 
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_question
       @question = Question.find(params[:id])
     end
+    def set_category
+      @category = @question.category
+    end
+    def set_qeval
+      @qeval = current_user.qevals.where(question_id: @question.id).first
+    end
+
+    def set_qeval_info
+      @qeval_avr = @question.qevals.average("ratepoint")
+      q5array = Array.new
+      if(@question.qevals.first != nil)
+        @question.qevals.each do |b|
+          q5array.push(b.ratepoint)
+        end
+        if(q5array.size>=2)
+          @qeval_dev = q5array.stdev
+        end      end
+    end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def question_params
       params.require(:question).permit(:title,:content)
     end
+    def can_qeval
+      @can_qeval = (@question.created_at + $due) > Time.now
+    end
+
+
 end

@@ -2,22 +2,34 @@ Rails.application.routes.draw do
   mount Ckeditor::Engine => '/ckeditor'
   resources :notices
   get 'admin/category'
+  get 'admin/users'
 
   get 'admin/index'
   get 'admin'=>"admin#index" ,:as=> 'admin'
-
-  post '/rate' => 'rater#create', :as => 'rate'
+  get 'admin/editmember/:id', to: "admin#editmember", as: 'admin_editmember'
+  put 'admin/updatemember/:id', to: "admin#updatemember", as: 'admin_updatemember'
+  patch 'admin/updatemember/:id', to: "admin#updatemember"
+  delete 'admin/deletemember/:id', to: "admin#deletemember", as: 'admin_deletemember'
   get 'home/index'
   get 'home/temp'
 
-  resources :questions do
-    resources :answers
-    resources :hevals
+  get 'user/:id',to: "user#index", as: 'user'
 
+  resources :questions do
+    resources :answers do
+      resources :aevals
+    end
+    resources :assigns
+    resources :hevals
+    resources :qevals
   end
   resources :categories do
       resources :questions do
+        get :aq
+        get :adminaq
         resources :answers
+        resources :qevals
+
       end
   end
   resources :mentorgroups do

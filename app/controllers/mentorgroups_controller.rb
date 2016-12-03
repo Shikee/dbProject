@@ -31,6 +31,7 @@ class MentorgroupsController < ApplicationController
   # POST /mentorgroups.json
   def create
     @mentorgroup = Mentorgroup.new(mentorgroup_params)
+
       if @mentorgroup.save
         redirect_to @mentorgroup, notice: 'Mentorgroup was successfully created.'
       else
@@ -89,6 +90,7 @@ class MentorgroupsController < ApplicationController
     @workfor = WorksFor.new
     @workfor.user_id = params[:works_for][:user_id]
     @workfor.mentorgroup_id= params[:works_for][:mentorgroup_id]
+    @workfor.category_id = Mentorgroup.find(params[:works_for][:mentorgroup_id]).category_id
     if @workfor.save
       redirect_to editmember_mentorgroup_path, notice: 'Member was successfully joined.'
     else

@@ -3,6 +3,7 @@
     <h1>무엇이든 물어보세요</br>오빠가 다 알려줄게</h1>
     <p>카테고리 입장하기</p>
     <ul class="actions">
+      <li><%=link_to "전체보기",   questions_path, :class=> "button alt"%></li>
       <%@categories.each do |a|%>
       <li><%=link_to a.name, category_path(a), :class=> "button alt"%></li>
       <%end%>

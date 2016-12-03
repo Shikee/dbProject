@@ -1,0 +1,9 @@
+<%= form_for [@question, @answer] do |f| %>
+  <h5>당신의 답변을 달아주세요!</h5>
+  <div class="field">
+    <%= f.cktext_area :content, class:"tinymce" %>
+  </div>
+  <div class="btn-group">
+    <%= f.submit "작성하기", class: 'btn-lightgreen' %>
+  </div>
+<%end%>

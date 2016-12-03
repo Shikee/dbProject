@@ -2,10 +2,59 @@
   <div class="inner">
     <p id="notice"><%= notice %></p>
 
-    <h1><%=@question.title%></h1>
-    <p ><%= raw @question.content%></p>
-     <%= rating_for @question, "coolness", :enable_half => false, disable_after_rate: true, imdb_avg: true %>
+    <%if (@is_super == true) %>
+      <%= link_to "질문 할당하기",   category_question_aq_path(params[:category_id],params[:id]) %>
+    <%elsif current_user.is_admin == true%>
+      <%= link_to "질문 할당하기",   category_question_adminaq_path(params[:category_id],params[:id]) %>
+    <%end%>
 
+
+
+    <h1><%=@question.title%></h1>
+    <p><%= raw @question.content%></p>
+    <%if @qeval != nil%>
+      <h6>회원님의 평가점수 : <%= @qeval.ratepoint%> | 평균점수 : <%= @qeval_avr%></h6>
+    <%end%>
+    <%if @can_qeval%>
+
+      <%if current_user.qevals.where(question_id: @question.id).first == nil%>
+        <%= form_for [@question,@question.qevals.new] do |f| %>
+          <div class="field">
+            <%= f.label "얼마나 좋은 질문인가요?", required: true , class:"eval"%><br />
+            <%= f.radio_button(:ratepoint, 1) %>
+            <%= f.label :ratepoint_1, '1'%>
+            <%= f.radio_button(:ratepoint, 2) %>
+            <%= f.label :ratepoint_2, '2'%>
+            <%= f.radio_button(:ratepoint, 3) %>
+            <%= f.label :ratepoint_3, '3'%>
+            <%= f.radio_button(:ratepoint, 4) %>
+            <%= f.label :ratepoint_4, '4'%>
+            <%= f.radio_button(:ratepoint, 5) %>
+            <%= f.label :ratepoint_5, '5'%>
+            <%= f.submit "평가하기" %>
+          </div>
+        <%end%>
+      <%else%>
+        <%= form_for [@question,@qeval], method: "patch" do |f| %>
+          <div class="field">
+            <%= f.label "평가 수정하기", required: true , class:"eval"%><br />
+            <%= f.radio_button(:ratepoint, 1) %>
+            <%= f.label :ratepoint_1, '1'%>
+            <%= f.radio_button(:ratepoint, 2) %>
+            <%= f.label :ratepoint_2, '2'%>
+            <%= f.radio_button(:ratepoint, 3) %>
+            <%= f.label :ratepoint_3, '3'%>
+            <%= f.radio_button(:ratepoint, 4) %>
+            <%= f.label :ratepoint_4, '4'%>
+            <%= f.radio_button(:ratepoint, 5) %>
+            <%= f.label :ratepoint_5, '5'%>
+            <%= f.submit "수정하기" %>
+          </div>
+        <%end%>
+      <%end%>
+    <%else%>
+
+    <%end%>
 
      <p><%= @question.hevals.count %>개의 100점제 평가</p>
      <% @question.hevals.each do |a|%>
@@ -13,75 +62,136 @@
         <p><%=  a.question2 %></p>
         <p><%= raw a.question3 %></p>
      <%end%>
-
     <p><%= @question.answers.count %>개의 답변</p>
-    <% @question.answers.each do |a|%>
+
+    <!-- 답변 리스트-->
+
+    <% @question.answers.each_with_index do |a,c|%>
+      <%d = c+1000000%>
       <p><%= raw a.content %></p>
-      <%= rating_for a, "coolness", :enable_half => false, disable_after_rate: true, imdb_avg: true%>
+      <%if a.aevals.where(answer_id: a.id).first != nil%>
+        <h6>회원님의 평가점수 : <%= a.aevals.where(answer_id: a.id).first.ratepoint%> | 평균점수 : <%= a.aevals.average("ratepoint")%></h6>
+      <%end%>
+      <%if (a.created_at + $due) > Time.now%>
+      <!-- 수정하기 넣어야함 -->
+        <%if current_user.aevals.where(answer_id: a.id).first == nil%>
+          <%= form_for [@question,a,a.aevals.new] do |f| %>
+            <div class="field">
+              <%= f.label "얼마나 좋은 답변인가요?", required: true %><br />
+              <%= f.radio_button(:ratepoint, 1, :name =>"aeval_#{c}",:id=> "aeval_#{c}_1") %>
+              <%= f.label "#{c}_1", '1'%>
+              <%= f.radio_button(:ratepoint, 2, :name =>"aeval_#{c}",:id=> "aeval_#{c}_2") %>
+              <%= f.label "#{c}_2", '2'%>
+              <%= f.radio_button(:ratepoint, 3, :name =>"aeval_#{c}",:id=> "aeval_#{c}_3") %>
+              <%= f.label "#{c}_3", '3'%>
+              <%= f.radio_button(:ratepoint, 4, :name =>"aeval_#{c}",:id=> "aeval_#{c}_4") %>
+              <%= f.label "#{c}_4", '4'%>
+              <%= f.radio_button(:ratepoint, 5, :name =>"aeval_#{c}",:id=> "aeval_#{c}_5") %>
+              <%= f.label "#{c}_5", '5'%>
+              <%= f.hidden_field :cnino, :value => c%>
+              <%= f.submit "평가하기" %>
+            </div>
+          <%end%>
+        <%else%>
+          <%= form_for [@question,a,a.aevals.where(answer_id: a.id).first], url: question_answer_aeval_path(@question.id,a.id,a.aevals.where(answer_id: a.id).first.id), method: "patch" do |f| %>
+              <%@aeval_avr = a.aevals.average("ratepoint")%>
+              <%       q5array = Array.new%>
+              <%if(a.aevals.first != nil)%>
+                <%       a.aevals.each do |b| %>
+                  <%         q5array.push(b.ratepoint)%>
+                <%end%>
+                  <%if q5array.size >1%>
+                    <%  @aeval_dev = q5array.stdev%>
+                  <%end%>
+              <%end%>
+            <div class="field">
+              <%= f.label "평가 수정하기", required: true , class:"eval"%><br />
+              <%= f.radio_button(:ratepoint, 1, :name =>"aeval_#{d}",:id=> "aeval_#{d}_1") %>
+              <%= f.label "#{d}_1", '1'%>
+              <%= f.radio_button(:ratepoint, 2, :name =>"aeval_#{d}",:id=> "aeval_#{d}_2") %>
+              <%= f.label "#{d}_2", '2'%>
+              <%= f.radio_button(:ratepoint, 3, :name =>"aeval_#{d}",:id=> "aeval_#{d}_3") %>
+              <%= f.label "#{d}_3", '3'%>
+              <%= f.radio_button(:ratepoint, 4, :name =>"aeval_#{d}",:id=> "aeval_#{d}_4") %>
+              <%= f.label "#{d}_4", '4'%>
+              <%= f.radio_button(:ratepoint, 5, :name =>"aeval_#{d}",:id=> "aeval_#{d}_5") %>
+              <%= f.label "#{d}_5", '5'%>
+              <%= f.submit "수정하기" %>
+            </div>
+          <%end%>
+        <%end%>
+        <%if user_signed_in?%>
+          <%if a.user.id == current_user.id%>
+            <%= link_to 'Edit', edit_question_answer_path(params[:id],a.id) %> |
+            <%= link_to 'Delete', question_answer_path(params[:id],a.id), method: :delete %>
+            질문의 평가 평균 : <%=@aeval_avr%> | 표준편차 : <%=@aeval_dev%>
+          <%end%>
+        <%end%>
+      <%end%>
+
     <%end%>
-
-    <%if user_signed_in?%>
-      <%if @is_mentor == true %>
-        <%= form_for [@question, @question.hevals.new] do |f| %>
-          <h5>멘토님, 백점제 평가를 해주세요.</h5>
-          <div class="field">
-            <%= f.label :question1,required: true %><br />
-           <%= f.radio_button(:question1, 1) %>
-           <%= f.label :question1_1, '1'%>
-           <%= f.radio_button(:question1, 2) %>
-           <%= f.label :question1_2, '2'%>
-           <%= f.radio_button(:question1, 3) %>
-           <%= f.label :question1_3, '3'%>
-           <%= f.radio_button(:question1, 4) %>
-           <%= f.label :question1_4, '4'%>
-           <%= f.radio_button(:question1, 5) %>
-           <%= f.label :question1_5, '5'%>
-
-
-          </div>
-          <div class="field">
-            <%= f.label :question2,required: true %><br />
-            <%= f.radio_button(:question2, 1) %>
-            <%= f.label :question2_1, '1'%>
-            <%= f.radio_button(:question2, 2) %>
-            <%= f.label :question2_2, '2'%>
-            <%= f.radio_button(:question2, 3) %>
-            <%= f.label :question2_3, '3'%>
-            <%= f.radio_button(:question2, 4) %>
-            <%= f.label :question2_4, '4'%>
-            <%= f.radio_button(:question2, 5) %>
-            <%= f.label :question2_5, '5'%>
+    <%if @can_qeval%>
+      <%if user_signed_in?%>
+        <%if @is_mentor == true %>
+          <%= form_for [@question, @question.hevals.new] do |f| %>
+            <h5>멘토님, 백점제 평가를 해주세요.</h5>
+            <div class="field">
+              <%= f.label :question1,required: true %><br />
+             <%= f.radio_button(:question1, 1) %>
+             <%= f.label :question1_1, '1'%>
+             <%= f.radio_button(:question1, 2) %>
+             <%= f.label :question1_2, '2'%>
+             <%= f.radio_button(:question1, 3) %>
+             <%= f.label :question1_3, '3'%>
+             <%= f.radio_button(:question1, 4) %>
+             <%= f.label :question1_4, '4'%>
+             <%= f.radio_button(:question1, 5) %>
+             <%= f.label :question1_5, '5'%>
 
 
-          </div>
-          <div class="field">
-            <%= f.label :question3,required: true %><br />
-            <%= f.cktext_area :question3, class:"tinymce" %>
-          </div>
-          <div class="btn-group">
-            <%= f.submit "작성하기", class: 'btn-lightgreen' %>
-          </div>
-        <%end%>
-      <%else%>
-        <%= form_for [@question, @question.answers.new] do |f| %>
-          <h5>당신의 답변을 달아주세요!</h5>
-          <div class="field">
-            <%= f.cktext_area :content, class:"tinymce" %>
-          </div>
-          <div class="btn-group">
-            <%= f.submit "작성하기", class: 'btn-lightgreen' %>
-          </div>
-        <%end%>
-    <% end %>
+            </div>
+            <div class="field">
+              <%= f.label :question2,required: true %><br />
+              <%= f.radio_button(:question2, 1) %>
+              <%= f.label :question2_1, '1'%>
+              <%= f.radio_button(:question2, 2) %>
+              <%= f.label :question2_2, '2'%>
+              <%= f.radio_button(:question2, 3) %>
+              <%= f.label :question2_3, '3'%>
+              <%= f.radio_button(:question2, 4) %>
+              <%= f.label :question2_4, '4'%>
+              <%= f.radio_button(:question2, 5) %>
+              <%= f.label :question2_5, '5'%>
 
 
-
+            </div>
+            <div class="field">
+              <%= f.label :question3,required: true %><br />
+              <%= f.cktext_area :question3, class:"tinymce" %>
+            </div>
+            <div class="btn-group">
+              <%= f.submit "작성하기", class: 'btn-lightgreen' %>
+            </div>
+          <%end%>
+        <%else%>
+          <%= form_for [@question, @question.answers.new] do |f| %>
+            <h5>당신의 답변을 달아주세요!</h5>
+            <div class="field">
+              <%= f.cktext_area :content, class:"tinymce" %>
+            </div>
+            <div class="btn-group">
+              <%= f.submit "작성하기", class: 'btn-lightgreen' %>
+            </div>
+          <%end%>
+        <% end %>
+      <%end%>
     <%end%>
 
     <%if user_signed_in?%>
       <%if @question.user.id == current_user.id%>
         <%= link_to 'Edit', edit_category_question_path(params[:category_id],params[:id]) %> |
-        <%= link_to 'Back', category_path(params[:category_id]) %>
+        <%= link_to 'Delete', category_question_path(params[:category_id]),method: :delete %>
+        질문의 평가 평균 : <%=@qeval_avr%> | 표준편차 : <%=@qeval_dev%>
       <%end%>
     <%end%>
   </div>

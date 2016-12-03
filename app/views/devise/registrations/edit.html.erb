@@ -32,6 +32,19 @@
         <%= f.label :current_password %> <i>(we need your current password to confirm your changes)</i><br />
         <%= f.password_field :current_password, autocomplete: "off" %>
       </div>
+      <div class="field">
+        <%= f.label :name,required: true %><br />
+        <%= f.text_field :name, autofocus: true %>
+      </div>
+
+      <div class="field">
+        <%= f.label :nickname,required: true %><br />
+        <%= f.text_field :nickname, autofocus: true %>
+      </div>
+      <div class="field">
+        <%= f.label :birth,required: true %><br />
+        <%= f.date_field :birth, autofocus: true %>
+      </div>
 
       <div class="actions">
         <%= f.submit "Update" %>

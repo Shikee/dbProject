@@ -1,0 +1,12 @@
+<section id="main">
+  <div class="inner">
+    <% @users.each do |a|%>
+      <div class="row">
+      <%=a.email%></br>
+
+      <%= link_to "정보보기", user_path(a.id)%>
+
+      </div>
+    <%end%>
+  </div>
+</section>

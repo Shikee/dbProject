@@ -12,18 +12,28 @@
       </thead>
 
       <tbody>
-        <% @questions.each do |question| %>
           <tr>
-            <td><%= link_to 'Show', question %></td>
-            <td><%= link_to 'Edit', edit_question_path(question) %></td>
-            <td><%= link_to 'Destroy', question, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+            <th><%=link_to "Category", :sort => "category_name"%></th>
+            <th><%=link_to "Title", :sort => "title"%></th>
+            <th><%=link_to "Average Point", :sort => "qpoint"%></th>
+            <th><%=link_to "Can Evaluate", :sort => "caneval"%></th>
+            <th><%=link_to "Created at", :sort => "created_at"%></th>
           </tr>
-        <% end %>
+          <% @questions.each do |question| %>
+          <%can = ((question.created_at + $due) > Time.now )%>
+
+          <tr>
+            <td><%= link_to question.category_name ,category_question_path(question.category.id,question.id) %></td>
+            <td><%= link_to question.title ,category_question_path(question.category.id,question.id) %></td>
+            <td><%= link_to  question.qpoint,category_question_path(question.category.id,question.id) %></td>
+            <td><%= link_to question.caneval ,category_question_path(question.category.id,question.id) %></td>
+            <td><%= link_to question.created_at ,category_question_path(question.category.id,question.id) %></td>
+          </tr>
+          <% end %>
       </tbody>
     </table>
 
     <br>
 
-    <%= link_to 'New Question', new_question_path %>
   </div>
 </section>

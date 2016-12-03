@@ -3,3 +3,11 @@
 
   background-color: orange;
 }
+
+.section {
+  background-image: url("/pic06.jpg");
+}
+
+.eval{
+  margin-bottom: -3%;
+}

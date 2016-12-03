@@ -3,7 +3,7 @@ class CreateQevals < ActiveRecord::Migration[5.0]
     create_table :qevals do |t|
       t.integer :user_id
       t.integer :question_id
-      t.integer :rate
+      t.integer :ratepoint
 
       t.timestamps
     end

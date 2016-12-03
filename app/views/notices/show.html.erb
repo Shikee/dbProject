@@ -13,7 +13,7 @@
     </p>
     <%if current_user.is_admin?%>
     <%= link_to 'Edit', edit_notice_path(@notice) %> |
-    <%= link_to 'Back', notices_path %>
+    <%= link_to 'Back', root_path %>
     <%end%>
   </div>
 </section>

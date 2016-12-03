@@ -1,0 +1,33 @@
+<section id="main">
+  <div class="inner">
+    <p>Assign List, click to delete</p>
+    <% if @assign != nil%>
+    <div class='row'>
+      <%@assign.each do |a|%>
+        <%=link_to a.user.name, question_assign_path(params[:question_id],a.id) , method: :delete , data: { confirm: 'Are you sure?' } %> 
+
+      <%end%>
+    </div>
+    <%end%>
+
+
+    <%= form_for [@question, @question.assigns.new] do |f| %>
+      <h5>할당합니다.</h5>
+      <div class="field">
+        <%= f.label :user_id,required: true %><br />
+        <%= f.text_field :user_id, autofocus: true %>
+      </div>
+      <div class="field">
+        <%= f.hidden_field :mentorgroup_id, :value => @mt%>
+      </div>
+      <div class="btn-group">
+        <%= f.submit "작성하기", class: 'btn-lightgreen' %>
+      </div>
+    <%end%>
+
+    <p>User list</p>
+    <%@user.each do |a|%>
+      <%=a.user_id%> <%=a.user.name%></br>
+    <%end%>
+  </div>
+</section>

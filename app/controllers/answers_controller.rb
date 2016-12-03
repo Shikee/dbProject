@@ -8,17 +8,19 @@ class AnswersController < ApplicationController
    @answer.user = current_user
 
    if @answer.save
+     current_user.increment!(:answer_count,1)
+
      redirect_to category_question_path(@question.category_id,@question.id), notice: 'Answer was successfully created.'
    else
      redirect_to category_question_path(@question.category_id,@question.id), alert: '답변이 저장되지 않았습니다.'
    end
  end
- 
+
  def update
    if @answer.update(answer_params)
-     redirect_to @question, notice: '답변이 성공적으로 수정되었습니다.'
+     redirect_to category_question_path(@question.category_id,@question.id), notice: '답변이 성공적으로 수정되었습니다.'
    else
-     redirect_to @question, notice: '답변이 수정되지 않았습니다.'
+     redirect_to category_question_path(@question.category_id,@question.id), notice: '답변이 수정되지 않았습니다.'
    end
  end
 
@@ -35,7 +37,9 @@ class AnswersController < ApplicationController
 
  def destroy
    @answer.destroy
-   redirect_to @question, notice: '답변이 삭제되었습니다.'
+   current_user.decrement!(:answer_count,1)
+
+   redirect_to category_question_path(@question.category_id,@question.id), notice: '답변이 삭제되었습니다.'
  end
 
  private

@@ -13,10 +13,8 @@
 //= require jquery
 //= require jquery.turbolinks
 //= require jquery_ujs
-//= require jquery.raty
-//= require ratyrate
 //= require bootstrap
-//= require ckeditor/init 
+//= require ckeditor/init
 //= require main
 //= require skel.min
 //= require util

@@ -1,0 +1,37 @@
+<section id="main">
+  <div class="inner">
+    <h4>회원 정보</h4>
+    <blockquote>
+      이메일 : <%= @user.email%></br>
+      이름 : <%= @user.name%></br>
+      닉네임 : <%= @user.nickname%></br>
+      성별 : <%= @user.sex%></br>
+      생일 : <%= @user.birth.strftime("%Y년 %m월 %d일")%></br>
+      질문 횟수 :<%= @user.question_count%></br>
+      답변 횟수 :<%= @user.answer_count%></br>
+      백점제 평가 횟수 :<%= @user.heval_count%></br>
+      5점제 평가 횟수 :<%= @user.eval_count%></br>
+      내가 평가한 5점제 평가 평균 : <%= @fiv_avr%></br>
+      내가 평가한 5점제 평가 표준편차 : <%= @fiv_dev%></br>
+      내가 평가한 100점제 평가 점수의 평균 : <%= @hun_avr%></br>
+      내가 평가한 100점제 평가 점수의 표준편차 : <%= @hun_dev%></br>
+      내 질문의 5점제 평가 평균 : <%= @q5_avr%></br>
+      내 질문의 5점제 평가 표준편차 : <%= @q5_dev%></br>
+      내 질문의 100점제 평가 평균 : <%= @q1_avr%></br>
+      내 질문의 100점제 평가 표준편차 : <%= @q1_dev%></br>
+      내게 할당 된 문제들 :
+      <%@assigns.each do |a|%>
+        <%= link_to a.question.title, category_question_path(a.question.category_id,a.question.id)%></br>
+      <%end%>
+
+
+
+  </blockquote>
+  <%if current_user.id.to_i == params[:id].to_i && current_user.is_admin == false%>
+    <%= link_to "회원정보 수정",edit_user_registration_path %>
+  <%end%>
+  <%if current_user.is_admin == true%>
+    <%= link_to "회원정보 수정",admin_editmember_path %>
+  <%end%>
+  </div>
+</section>

@@ -1,8 +1,10 @@
 <p>Member List, click to delete</p>
 <% if @members != nil%>
-  <%@members.each do |a|%>
-    <%= button_to a.user.name, destroymember_mentorgroup_path(a.id), :method => :delete %></br>
-  <%end%>
+  <div class="row">
+    <%@members.each do |a|%>
+      <%= button_to a.user.name, destroymember_mentorgroup_path(a.id), :method => :delete %>
+    <%end%>
+  </div>
 <%end%>
 <%= form_for(@workfor, :url => updatemember_mentorgroup_path) do |f| %>
   <% if @mentorgroup.errors.any? %>

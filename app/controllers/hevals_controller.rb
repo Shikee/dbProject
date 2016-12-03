@@ -29,6 +29,7 @@ class HevalsController < ApplicationController
     @heval.user = current_user
     @heval.question = @question
       if @heval.save
+        current_user.increment!(:heval_count,1)
         redirect_to category_question_path(@question.category_id,@question.id), notice: 'Answer was successfully created.'
       else
         redirect_to category_question_path(@question.category_id,@question.id), notice: 'Answer was successfully created.'
@@ -49,7 +50,9 @@ class HevalsController < ApplicationController
   # DELETE /hevals/1.json
   def destroy
     @heval.destroy
-      fredirect_to hevals_url, notice: 'Heval was successfully destroyed.'
+    current_user.decrement!(:heval_count,1)
+
+      redirect_to hevals_url, notice: 'Heval was successfully destroyed.'
   end
 
   private
