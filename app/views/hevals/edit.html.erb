@@ -2,5 +2,4 @@
 
 <%= render 'form', heval: @heval %>
 
-<%= link_to 'Show', @heval %> |
-<%= link_to 'Back', hevals_path %>
+<%= link_to 'Back', category_question_path(@question.category_id,@question.id) %>

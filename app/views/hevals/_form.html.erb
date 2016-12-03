@@ -1,17 +1,39 @@
-<%= form_for(heval) do |f| %>
-  <% if heval.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(heval.errors.count, "error") %> prohibited this heval from being saved:</h2>
+<%= form_for [@question, @heval] do |f| %>
+  <h4>멘토님, 백점제 평가를 해주세요.</h4>
+  <div class="field">
+    <%= f.label "질문이 얼마나 자세히 설명되어있나요?",required: true %><br />
+   <%= f.radio_button(:question1, 10) %>
+   <%= f.label :question1_10, '10'%>
+   <%= f.radio_button(:question1, 20) %>
+   <%= f.label :question1_20, '20'%>
+   <%= f.radio_button(:question1, 30) %>
+   <%= f.label :question1_30, '30'%>
+   <%= f.radio_button(:question1, 40) %>
+   <%= f.label :question1_40, '40'%>
+   <%= f.radio_button(:question1, 50) %>
+   <%= f.label :question1_50, '50'%>
 
-      <ul>
-      <% heval.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
 
-  <div class="actions">
-    <%= f.submit %>
   </div>
-<% end %>
+  <div class="field">
+    <%= f.label "질문이 얼마나 전문적인 내용인가요?",required: true %><br />
+    <%= f.radio_button(:question2, 10) %>
+    <%= f.label :question2_10, '10'%>
+    <%= f.radio_button(:question2, 20) %>
+    <%= f.label :question2_20, '20'%>
+    <%= f.radio_button(:question2, 30) %>
+    <%= f.label :question2_30, '30'%>
+    <%= f.radio_button(:question2, 40) %>
+    <%= f.label :question2_40, '40'%>
+    <%= f.radio_button(:question2, 50) %>
+    <%= f.label :question2_50, '50'%>
+
+  </div>
+  <div class="field">
+    <%= f.label "답변을 입력해주세요.",required: true %><br />
+    <%= f.cktext_area :question3, class:"tinymce" %>
+  </div>
+  <div class="btn-group">
+    <%= f.submit "작성하기", class: 'btn-lightgreen' %>
+  </div>
+<%end%>

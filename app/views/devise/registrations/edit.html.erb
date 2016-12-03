@@ -45,6 +45,15 @@
         <%= f.label :birth,required: true %><br />
         <%= f.date_field :birth, autofocus: true %>
       </div>
+      <div class="field">
+        <%= f.label :sex,required: true %><br />
+        <%= f.radio_button :sex, "male" %>
+        <%= f.label :sex_male, 'male'%>
+        <%= f.radio_button :sex, "female" %>
+        <%= f.label :sex_female, 'female' %>
+
+
+      </div>
 
       <div class="actions">
         <%= f.submit "Update" %>

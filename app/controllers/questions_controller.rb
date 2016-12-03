@@ -1,9 +1,12 @@
 class QuestionsController < ApplicationController
   before_action :set_question, only: [:show, :edit, :update, :destroy]
+  before_action :check, only: [:index]
+
   before_action :can_qeval, only: [:show, :edit, :update, :destroy]
   before_action :set_qeval, only: [:show]
   before_action :set_qeval_info, only: [:show]
   before_action :set_category, only: [:show]
+
 
   # GET /questions
   # GET /questions.json
@@ -14,6 +17,27 @@ class QuestionsController < ApplicationController
   # GET /questions/1
   # GET /questions/1.json
   def index
+    question = Question.all
+    question.each do |a|
+      current_user.assigns.each do |b|
+        if b.question_id == a.id
+          a.update_attributes(assign: 1)
+        end
+      end
+    end
+    if @is_mentor == false
+      if params[:sort] =="qpoint"
+        @questions = Question.sorted_by_qpoint
+      elsif params[:sort] =="category_name"
+        @questions = Question.sorted_by_category_name
+      elsif params[:sort] =="caneval"
+        @questions = Question.sorted_by_caneval
+      else
+        @questions = Question.order(params[:sort])
+      end
+    end
+
+
     if params[:sort] =="qpoint"
       @questions = Question.sorted_by_qpoint
     elsif params[:sort] =="category_name"
@@ -23,7 +47,12 @@ class QuestionsController < ApplicationController
     else
       @questions = Question.order(params[:sort])
     end
+
   end
+
+
+
+
   def show
     @is_mentor = false
     @is_super = false
@@ -88,8 +117,9 @@ class QuestionsController < ApplicationController
   end
 
   def aq
-    mentorgroups = Mentorgroup.where(category_id: params[:category_id])
+    mentorgroups = Mentorgroup.where(category_id: params[:category_id]).where(user_id: current_user.id)
     @question = Question.find(params[:question_id])
+    @mt = mentorgroups.first.id
     @user = Mentorgroup.find(@mt).WorksFor
     @assign = Assign.where(question_id: params[:question_id]).where(mentorgroup_id: @mt)
   end
@@ -110,7 +140,9 @@ class QuestionsController < ApplicationController
       @category = @question.category
     end
     def set_qeval
-      @qeval = current_user.qevals.where(question_id: @question.id).first
+      if user_signed_in?
+        @qeval = current_user.qevals.where(question_id: @question.id).first
+      end
     end
 
     def set_qeval_info
@@ -122,7 +154,8 @@ class QuestionsController < ApplicationController
         end
         if(q5array.size>=2)
           @qeval_dev = q5array.stdev
-        end      end
+        end
+      end
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
@@ -133,5 +166,20 @@ class QuestionsController < ApplicationController
       @can_qeval = (@question.created_at + $due) > Time.now
     end
 
+    def check
+      @is_mentor = false
+      @is_super = false
+      if(current_user !=nil)
+        if current_user.WorksFor.first != nil
+          @is_mentor = true
+        end
+        mentorgroups = Mentorgroup.all
+        mentorgroups.each do |a|
+          if(a.user_id.to_i == current_user.id.to_i)
+            @is_super = true
+          end
+        end
+      end
+    end
 
 end

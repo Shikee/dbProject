@@ -40,9 +40,9 @@ class HevalsController < ApplicationController
   # PATCH/PUT /hevals/1.json
   def update
       if @heval.update(heval_params)
-        redirect_to @heval, notice: 'Heval was successfully updated.'
+        redirect_to category_question_path(@question.category_id,@question.id), notice: '답변이 성공적으로 수정되었습니다.'
       else
-        render :edit
+        redirect_to category_question_path(@question.category_id,@question.id), notice: '답변이 수정되지 않았습니다.'
       end
   end
 
@@ -52,7 +52,7 @@ class HevalsController < ApplicationController
     @heval.destroy
     current_user.decrement!(:heval_count,1)
 
-      redirect_to hevals_url, notice: 'Heval was successfully destroyed.'
+    redirect_to category_question_path(@question.category_id,@question.id), notice: '백점제 평가가 성공적으로 삭제되었습니다.'
   end
 
   private

@@ -1,10 +1,10 @@
 <section id="main">
   <div class="inner">
     <div class="table-wrapper">
-    <% if @super !=nil%>
+    <%if @super.is_admin ==true %>
+        <h4> Super Mentor : 현재 공석입니다. 관리자가 권한을 가지고 있습니다.</h4>
+    <%elsif @super !=nil%>
       <h4>  Super Mentor : <%= @super.nickname+"("+@super.email+")"%></h4>
-    <%else%>
-      <h4> Super Mentor : 현재 공석입니다. 관리자가 권한을 가지고 있습니다.</h4>
     <%end%>
 
     <h4>  Members of the group</h4>
@@ -30,8 +30,10 @@
       </table>
     </div>
     <%if current_user.is_admin?%>
-    <%= link_to 'Edit', edit_mentorgroup_path(@mentorgroup) %> |
-    <%end%>
+    <%= link_to '수퍼멘토 설정하기', setsuper_mentorgroup_path(@mentorgroup) %> |
+    <%= link_to '일반멘토 추가하기',  editmember_mentorgroup_path(@mentorgroup)%> |
+    <%= link_to '멘토그룹 이름 수정', edit_mentorgroup_path(@mentorgroup) %>
+    <%end%></br>
     <%= link_to 'Back', mentorgroups_path %>
   </div>
 </section>

@@ -4,7 +4,7 @@
     <% if @assign != nil%>
     <div class='row'>
       <%@assign.each do |a|%>
-        <%=link_to a.user.name, question_assign_path(params[:question_id],a.id) , method: :delete , data: { confirm: 'Are you sure?' } %> 
+        <%=link_to a.user.name, question_assign_path(params[:question_id],a.id) , method: :delete , data: { confirm: 'Are you sure?' } %>
 
       <%end%>
     </div>
@@ -27,7 +27,7 @@
 
     <p>User list</p>
     <%@user.each do |a|%>
-      <%=a.user_id%> <%=a.user.name%></br>
+      <%=a.user_id%>  | <%=a.user.name%></br>
     <%end%>
   </div>
 </section>

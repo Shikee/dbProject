@@ -25,12 +25,14 @@
       </div>
     <%end%>
 
-    <p>User list</p>
     <% @mentorgroups.each do |a| %>
-      <%= a.id%><%= a.name%> </br>
+      <p>멘토그룹</p>
+      id : <%= a.id%> | 이름 : <%= a.name%> </br></br>
+      <p>User list</p>
+
       <%a.WorksFor.each do |b|%>
-        <%=b.user_id%> <%=b.user.name%></br>
-      <%end%>
+        id :   <%=b.user_id%>| 이름 : <%=b.user.name%></br>
+        <%end%>
     <%end%>
   </div>
 </section>

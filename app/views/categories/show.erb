@@ -1,6 +1,16 @@
 <section id="main">
   <div class="inner">
     <div class="table-wrapper">
+      <h3><%= @category.name%></h3>
+      <%if user_signed_in?%>
+        <% if current_user.is_admin == true%><h4>관리자 입니다.</h4>
+        <% elsif @is_super == true%><h4>수퍼멘토 입니다.</h4>
+        <% elsif @is_mentor == true%><h4>일반멘토 입니다.</h4>
+        <% else %><h4>멘티 입니다.</h4><%end%>
+
+      <%else%>
+      <h4>방문자 입니다. 회원가입을 해보세요.</h4>
+      <%end%>
       <table>
         <thead>
           <tr>

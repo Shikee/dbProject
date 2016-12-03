@@ -12,7 +12,11 @@ class Question < ApplicationRecord
       self.category.name.to_s
     end
     def caneval
-      (self.created_at + $due) > Time.now
+      if (self.created_at + $due) > Time.now
+        return 1
+      else
+        return 0
+      end
     end
 
 
@@ -24,7 +28,7 @@ class Question < ApplicationRecord
     end
     def self.sorted_by_caneval
       Question.all.sort_by(&:caneval).reverse
-
     end
+
 
 end

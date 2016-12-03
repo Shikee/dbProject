@@ -44,7 +44,7 @@ class AnswersController < ApplicationController
 
  private
    def check_user
-     redirect_to :back if @answer.user_id != current_user.id && !(current_user.admin?)
+     redirect_to :back if (@answer.user_id != current_user.id) && (current_user.is_admin != true)
    end
 
    def set_question

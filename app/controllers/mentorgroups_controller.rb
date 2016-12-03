@@ -33,7 +33,7 @@ class MentorgroupsController < ApplicationController
     @mentorgroup = Mentorgroup.new(mentorgroup_params)
 
       if @mentorgroup.save
-        redirect_to @mentorgroup, notice: 'Mentorgroup was successfully created.'
+        redirect_to mentorgroups_path, notice: 'Mentorgroup was successfully created.'
       else
         render :new
       end
@@ -113,7 +113,7 @@ class MentorgroupsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def mentorgroup_params
-      params.require(:mentorgroup).permit(:name, :category_id)
+      params.require(:mentorgroup).permit(:name, :category_id,:user_id)
     end
     def worksfor_params
       params.require(:WorksFor).permit(:user_id, :mentorgroup_id)

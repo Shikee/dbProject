@@ -1,7 +1,10 @@
 <section id="main">
+
   <div class="inner">
     <p id="notice"><%= notice %></p>
     <h1>Mentorgroups</h1>
+
+    <%if @mentorgroups.first != nil%>
       <% @mentorgroups.each do |mentorgroup| %>
           <%= mentorgroup.category.name%>
           <%= mentorgroup.name%></br>
@@ -18,6 +21,7 @@
           <%end%>
           </br></br>
       <% end %>
+    <%end%>
       </br>
     <br>
     <%if current_user.is_admin?%>

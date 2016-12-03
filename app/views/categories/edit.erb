@@ -1,0 +1,11 @@
+<%= form_for @category do |f| %>
+  <div class="field">
+    <%= f.label :name %>
+    <br/>
+    <%= f.text_field :name %>
+  </div>
+
+    <%= f.submit 'Save' %>
+<% end %>
+
+<%= link_to 'Home', root_path %>

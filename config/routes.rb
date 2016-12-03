@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+
+  devise_for :users
   mount Ckeditor::Engine => '/ckeditor'
   resources :notices
   get 'admin/category'
@@ -44,7 +46,6 @@ Rails.application.routes.draw do
       delete :destroysuper
     end
   end
-  devise_for :users
   root 'home#index'
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end
