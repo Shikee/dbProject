@@ -30,7 +30,6 @@ gem 'devise'
 gem 'ckeditor', '4.1.3'
 gem 'paperclip'
 gem  'ruby_native_statistics'
-
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 

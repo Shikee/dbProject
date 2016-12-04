@@ -5,6 +5,7 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :trackable, :validatable
   validates :nickname , uniqueness: true
   validates_presence_of :name, :sex, :nickname ,:message => "정보를 적어주세요!"
+
   has_many :mentorgroups
   has_many :WorksFor ,dependent: :destroy
   has_many :mentorgroups, :through => :WorksFor
@@ -14,5 +15,4 @@ class User < ApplicationRecord
   has_many :qevals,dependent: :destroy
   has_many :aevals,dependent: :destroy
   has_many :assigns ,dependent: :destroy
-
 end

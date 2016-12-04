@@ -10,6 +10,18 @@ class AdminController < ApplicationController
   end
   def users
     @users = User.all
+    @users.each do |a|
+      a.age = Time.now.utc.to_date.year - a.birth.year
+      if(a.WorksFor.first != nil)
+        a.role = "mentor"
+      end
+    end
+    group = Mentorgroup.all
+    group.each do |a|
+      User.find(a.user_id).update_attributes(role: "super")
+    end
+
+
   end
   def editmember
 
