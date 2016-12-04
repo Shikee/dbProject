@@ -28,8 +28,11 @@ class QuestionsController < ApplicationController
       end
     end
     if @is_mentor == false
-      if params[:sort] =="qpoint"
+      if params[:sort] =="qpoint1"
         @questions = Question.sorted_by_qpoint
+      elsif params[:sort] == "qpoint2"
+        @questions = Question.sorted_by_qpoint2
+
       elsif params[:sort] =="category_name"
         @questions = Question.sorted_by_category_name
       elsif params[:sort] =="caneval"
@@ -41,8 +44,10 @@ class QuestionsController < ApplicationController
 
       end
     end
-    if params[:sort] =="qpoint"
+    if params[:sort] =="qpoint1"
       @questions = Question.sorted_by_qpoint
+    elsif params[:sort] =="qpoint2"
+      @questions = Question.sorted_by_qpoint2
     elsif params[:sort] =="category_name"
       @questions = Question.sorted_by_category_name
     elsif params[:sort] =="caneval"

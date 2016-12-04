@@ -15,7 +15,8 @@
           <tr>
             <th><%=link_to "Category", :sort => "category_name"%></th>
             <th><%=link_to "Title", :sort => "title"%></th>
-            <th><%=link_to "Average Point", :sort => "qpoint"%></th>
+            <th><%=link_to "Average Point Desc", :sort => "qpoint1"%></th>
+            <th><%=link_to "Average Point Asc", :sort => "qpoint2"%></th>
             <th><%=link_to "Can Evaluate", :sort => "caneval"%></th>
             <th><%=link_to "Created at", :sort => "created_at"%></th>
           </tr>
@@ -25,7 +26,8 @@
           <tr>
             <td><%= link_to question.category_name ,category_question_path(question.category.id,question.id) %></td>
             <td><%= link_to question.title ,category_question_path(question.category.id,question.id) %></td>
-            <td><%= link_to  question.qpoint,category_question_path(question.category.id,question.id) %></td>
+            <td></td>
+            <td><%= link_to  question.qpoint2,category_question_path(question.category.id,question.id) %></td>
             <td><%= link_to question.caneval ,category_question_path(question.category.id,question.id) %></td>
             <td><%= link_to question.created_at ,category_question_path(question.category.id,question.id) %></td>
           </tr>
@@ -44,7 +46,8 @@
           <tr>
             <th><%=link_to "Category", :sort => "category_name"%></th>
             <th><%=link_to "Title", :sort => "title"%></th>
-            <th><%=link_to "Average Point", :sort => "qpoint"%></th>
+            <th><%=link_to "Average Point Desc", :sort => "qpoint1"%></th>
+            <th><%=link_to "Average Point Asc", :sort => "qpoint2"%></th>
             <th><%=link_to "Can Evaluate", :sort => "caneval"%></th>
             <th><%=link_to "Created at", :sort => "created_at"%></th>
             <th><%=link_to "Is assign", :sort => "assign"%></th>
@@ -57,7 +60,8 @@
             <tr>
               <td><%= link_to question.category_name ,category_question_path(question.category.id,question.id) %></td>
               <td><%= link_to question.title ,category_question_path(question.category.id,question.id) %></td>
-              <td><%= link_to  question.qpoint,category_question_path(question.category.id,question.id) %></td>
+              <td></td>
+              <td><%= link_to  question.qpoint2,category_question_path(question.category.id,question.id) %></td>
               <td><%= link_to question.caneval ,category_question_path(question.category.id,question.id) %></td>
               <td><%= link_to question.created_at ,category_question_path(question.category.id,question.id) %></td>
               <td><%= link_to b ,category_question_path(question.category.id,question.id) %></td>
