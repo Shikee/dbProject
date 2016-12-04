@@ -47,7 +47,7 @@
             <th><%=link_to "Average Point", :sort => "qpoint"%></th>
             <th><%=link_to "Can Evaluate", :sort => "caneval"%></th>
             <th><%=link_to "Created at", :sort => "created_at"%></th>
-            <th><%=link_to "Is assing", :sort => "assign"%></th>
+            <th><%=link_to "Is assign", :sort => "assign"%></th>
           </tr>
             <% @questions.each do |question| %>
             <%if question.assign == false%>

@@ -20,10 +20,6 @@ class AevalsController < ApplicationController
 
   def update
     para = params.to_unsafe_h()
-    puts para.values[0]
-    puts para.values[1]
-    puts para.values[2]
-    puts para.values[3]
     @aeval.ratepoint =  para.values[3]
     @aeval.answer_id = params[:answer_id]
     if @aeval.save

@@ -34,18 +34,23 @@ class QuestionsController < ApplicationController
         @questions = Question.sorted_by_category_name
       elsif params[:sort] =="caneval"
         @questions = Question.sorted_by_caneval
+      elsif params[:sort] =="created_at"
+        @questions = Question.order('created_at ASC' )
       else
         @questions = Question.order(params[:sort])
+
       end
     end
-
-
     if params[:sort] =="qpoint"
       @questions = Question.sorted_by_qpoint
     elsif params[:sort] =="category_name"
       @questions = Question.sorted_by_category_name
     elsif params[:sort] =="caneval"
       @questions = Question.sorted_by_caneval
+    elsif params[:sort] == "created_at"
+      @questions = Question.order("created_at DESC").all
+    elsif params[:sort] == "assign"
+      @questions = Question.order("assign DESC").all
     else
       @questions = Question.order(params[:sort])
     end

@@ -6,8 +6,10 @@
 
     <%if @mentorgroups.first != nil%>
       <% @mentorgroups.each do |mentorgroup| %>
-          <%= mentorgroup.category.name%>
-          <%= mentorgroup.name%></br>
+        <p><font color="green">카테고리 :</font>
+          <%= mentorgroup.category.name%></p>
+          <p><font color="green">멘토그룹 이름 :</font>
+          <%= mentorgroup.name%></p>
           <%= link_to 'Show', mentorgroup %>
           <%if user_signed_in? && current_user.is_admin == true%>
             <%= link_to 'Set super', setsuper_mentorgroup_path(mentorgroup) %>

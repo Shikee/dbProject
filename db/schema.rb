@@ -128,9 +128,9 @@ ActiveRecord::Schema.define(version: 20161204034337) do
     t.text     "content",     limit: 65535
     t.integer  "category_id"
     t.integer  "user_id"
+    t.integer  "assign",                    default: 0
     t.datetime "created_at",                            null: false
     t.datetime "updated_at",                            null: false
-    t.integer  "assign",                    default: 0
   end
 
   create_table "users", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|

@@ -1,10 +1,9 @@
 <section id="main">
   <div class="inner">
   <%if current_user.is_admin == true%>
-    <p>current Super list(버튼을 눌러 수퍼멘토 삭제)</p>
+    <p>현재 수퍼멘토 이메일(버튼을 눌러 수퍼멘토 삭제)</p>
     <% if @current_super != "now empty"%>
-      <%= button_to @current_super.name, destroysuper_mentorgroup_path(params[:id]), :method => :delete %></br>
-      <%= @current_super.name%>
+      <%= button_to @current_super.email, destroysuper_mentorgroup_path(params[:id]), :method => :delete %></br>
     <%end%>
     <p>User list</p>
     <%@user.each do |a|%>

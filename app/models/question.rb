@@ -18,8 +18,6 @@ class Question < ApplicationRecord
         return 0
       end
     end
-
-
     def self.sorted_by_qpoint
       Question.all.sort_by(&:qpoint).reverse
     end

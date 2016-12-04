@@ -92,7 +92,6 @@
     <%if @question.answers.first != nil%>
       <% @question.answers.each_with_index do |a,c|%>
       <hr>
-
         <%d = c+1000000%>
         <p><%= raw a.content %></p>
         <%if user_signed_in?%>
@@ -137,7 +136,6 @@
                 </div>
               <%end%>
             <%elsif user_signed_in?%>
-
               <%= form_for [@question,a,a.aevals.where(answer_id: a.id).first], url: question_answer_aeval_path(@question.id,a.id,a.aevals.where(answer_id: a.id).first.id), method: "patch" do |f| %>
 
                 <div class="field">

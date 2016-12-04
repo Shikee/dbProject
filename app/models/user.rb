@@ -4,7 +4,7 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
   validates :nickname , uniqueness: true
-  validates_presence_of :name, :sex, :nickname ,:message => "정보를 적어주세요!"
+  validates_presence_of :name, :sex,:birth, :nickname ,:message => "정보를 적어주세요!"
 
   has_many :mentorgroups
   has_many :WorksFor ,dependent: :destroy
