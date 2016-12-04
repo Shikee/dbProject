@@ -1,3 +1,5 @@
+<section id="main">
+  <div class="inner">
 <p>Member List, click to delete</p>
 <% if @members != nil%>
   <div class="row">
@@ -19,7 +21,7 @@
   <% end %>
 
     <div class="field">
-      <%= f.label :user_id,required: true %><br />
+      <%= f.label :user_id, "User ID를 입력해주세요" ,required: true %><br />
       <%= f.text_field :user_id, autofocus: true %>
     </div>
     <div class="field">
@@ -32,5 +34,8 @@
 
 <p>User list</p>
 <%@user.each do |a|%>
-  <%=a.id%> <%=a.name%></br>
+  id : <%=a.id%> | 이메일 : <%=a.email%></br>
 <%end%>
+
+</div>
+</section>

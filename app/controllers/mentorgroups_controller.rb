@@ -1,4 +1,5 @@
 class MentorgroupsController < ApplicationController
+  before_filter :authenticate_user!
   before_action :set_mentorgroup, only: [:show, :edit, :update, :destroy, :setsuper,:updatesuper,:editmember,:updatemember]
 
   # GET /mentorgroups

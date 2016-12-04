@@ -7,19 +7,23 @@ class AdminController < ApplicationController
   end
 
   def index
-  end
-  def users
     @users = User.all
+
     @users.each do |a|
       a.age = Time.now.utc.to_date.year - a.birth.year
       if(a.WorksFor.first != nil)
         a.role = "mentor"
       end
+      a.save
     end
     group = Mentorgroup.all
     group.each do |a|
       User.find(a.user_id).update_attributes(role: "super")
     end
+  end
+  def fusers
+    @users = User.all
+
 
 
   end

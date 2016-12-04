@@ -18,10 +18,12 @@ class QuestionsController < ApplicationController
   # GET /questions/1.json
   def index
     question = Question.all
-    question.each do |a|
-      current_user.assigns.each do |b|
-        if b.question_id == a.id
-          a.update_attributes(assign: 1)
+    if user_signed_in?
+      question.each do |a|
+        current_user.assigns.each do |b|
+          if b.question_id == a.id
+            a.update_attributes(assign: 1)
+          end
         end
       end
     end

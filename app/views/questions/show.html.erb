@@ -10,8 +10,9 @@
 
 
 
-    <h1><%=@question.title%></h1>
-    <p><%= raw @question.content%></p>
+    <h1>제목 : <%=@question.title%></h1>
+    <h3>내용 : </h3>
+    <p> <%= raw @question.content%></p>
     <%if @qeval != nil%>
       <h6>회원님의 평가점수 : <%= @qeval.ratepoint%> | 평균점수 : <%= @qeval_avr%></h6>
     <%end%>
@@ -33,7 +34,7 @@
             <%= f.submit "평가하기" %>
           </div>
         <%end%>
-      <%elsif user_signed_in?%>
+      <%elsif user_signed_in?&& current_user.is_admin == false%>
         <%= form_for [@question,@qeval], method: "patch" do |f| %>
           <div class="field">
             <%= f.label "평가 수정하기", required: true , class:"eval"%><br />
@@ -67,13 +68,13 @@
     <hr>
 
 
-     <p><%= @question.hevals.count %>개의 100점제 평가</p>
+     <h4><%= @question.hevals.count %>개의 100점제 평가</h4>
      <%if @question.hevals.first != nil%>
        <% @question.hevals.each do |a|%>
        <hr>
-          <p><%=  a.question1 %></p>
-          <p><%=  a.question2 %></p>
-          <p><%= raw a.question3 %></p>
+          <p>질문이 얼마나 자세히 설명되어있나요?  <%=  a.question1 %>점</p>
+          <p>질문이 얼마나 전문적인 내용인가요?   <%=  a.question2 %>점</p>
+          <p>답변 내용 : </p><p><%= raw a.question3 %></p>
           <%if user_signed_in?%>
             <%if (a.user.id == current_user.id) || (@is_super ==true) || (current_user.is_admin==true)%>
               <%= link_to 'Edit', edit_question_heval_path(params[:id],a.id) %> |
@@ -85,7 +86,7 @@
      <%end%>
      <hr>
 
-    <p><%= @question.answers.count %>개의 답변</p>
+    <h4><%= @question.answers.count %>개의 답변</h4>
 
     <!-- 답변 리스트-->
     <%if @question.answers.first != nil%>
@@ -94,12 +95,29 @@
 
         <%d = c+1000000%>
         <p><%= raw a.content %></p>
+        <%if user_signed_in?%>
+          <%if (a.user.id == current_user.id) || (@is_super ==true) || (current_user.is_admin==true)%>
+            <% aeval_avr = a.aevals.average("ratepoint")%>
+            <%       q5array = Array.new%>
+            <%if(a.aevals.first != nil)%>
+              <%       a.aevals.each do |b| %>
+                <%         q5array.push(b.ratepoint)%>
+              <%end%>
+                <%if q5array.size >1%>
+                  <%  aeval_dev = q5array.stdev%>
+                <%end%>
+            <%end%>
+            <%= link_to 'Edit', edit_question_answer_path(params[:id],a.id) %> |
+            <%= link_to 'Delete', question_answer_path(params[:id],a.id), method: :delete %>
+            답변의 평가 평균 : <%=aeval_avr%> | 표준편차 : <%=aeval_dev%>
+          <%end%>
+        <%end%>
         <%if a.aevals.where(answer_id: a.id).first != nil%>
           <h6>회원님의 평가점수 : <%= a.aevals.where(answer_id: a.id).first.ratepoint%> | 평균점수 : <%= a.aevals.average("ratepoint")%></h6>
         <%end%>
         <%if (a.created_at + $due) > Time.now%>
         <!-- 수정하기 넣어야함 -->
-          <% if current_user.is_admin == false && @is_mentor==false && @is_super == false%>
+          <% if  user_signed_in? && current_user.is_admin == false && @is_mentor==false && @is_super == false%>
             <%if user_signed_in? &&current_user.aevals.where(answer_id: a.id).first == nil %>
               <%= form_for [@question,a,a.aevals.new] do |f| %>
                 <div class="field">
@@ -121,16 +139,7 @@
             <%elsif user_signed_in?%>
 
               <%= form_for [@question,a,a.aevals.where(answer_id: a.id).first], url: question_answer_aeval_path(@question.id,a.id,a.aevals.where(answer_id: a.id).first.id), method: "patch" do |f| %>
-                  <%@aeval_avr = a.aevals.average("ratepoint")%>
-                  <%       q5array = Array.new%>
-                  <%if(a.aevals.first != nil)%>
-                    <%       a.aevals.each do |b| %>
-                      <%         q5array.push(b.ratepoint)%>
-                    <%end%>
-                      <%if q5array.size >1%>
-                        <%  @aeval_dev = q5array.stdev%>
-                      <%end%>
-                  <%end%>
+
                 <div class="field">
                   <%= f.label "평가 수정하기", required: true , class:"eval"%><br />
                   <%= f.radio_button(:ratepoint, 1, :name =>"aeval_#{d}",:id=> "aeval_#{d}_1") %>
@@ -147,13 +156,7 @@
                 </div>
               <%end%>
             <%end%>
-            <%if user_signed_in?%>
-              <%if (a.user.id == current_user.id) || (@is_super ==true) || (current_user.is_admin==true)%>
-                <%= link_to 'Edit', edit_question_answer_path(params[:id],a.id) %> |
-                <%= link_to 'Delete', question_answer_path(params[:id],a.id), method: :delete %>
-                질문의 평가 평균 : <%=@aeval_avr%> | 표준편차 : <%=@aeval_dev%>
-              <%end%>
-            <%end%>
+
           <%end%>
         <%end%>
 

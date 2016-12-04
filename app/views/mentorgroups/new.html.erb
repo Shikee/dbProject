@@ -1,7 +1,13 @@
+<section id="main">
+  <div class="inner">
 <h1>New Mentorgroup</h1>
+<p>카테고리 현황</p>
 <% @categories.each do |a|%>
-  <%=a.id%> = <%=a.name%></br>
+  id : <%=a.id%> | 이름 <%=a.name%></br>
 <%end%>
+</br>
 <%= render 'form', mentorgroup: @mentorgroup %>
 
 <%= link_to 'Back', mentorgroups_path %>
+</div>
+</section>

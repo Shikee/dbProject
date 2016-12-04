@@ -1,10 +1,12 @@
 Rails.application.routes.draw do
 
+  devise_for :admin_users, ActiveAdmin::Devise.config
+  ActiveAdmin.routes(self)
   devise_for :users
   mount Ckeditor::Engine => '/ckeditor'
   resources :notices
   get 'admin/category'
-  get 'admin/users'
+  get 'admin/fusers'
 
   get 'admin/index'
   get 'admin'=>"admin#index" ,:as=> 'admin'

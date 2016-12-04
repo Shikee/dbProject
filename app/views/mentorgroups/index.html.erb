@@ -9,22 +9,24 @@
           <%= mentorgroup.category.name%>
           <%= mentorgroup.name%></br>
           <%= link_to 'Show', mentorgroup %>
-          <%if current_user.is_admin == true%>
+          <%if user_signed_in? && current_user.is_admin == true%>
             <%= link_to 'Set super', setsuper_mentorgroup_path(mentorgroup) %>
 
 
             <%= link_to 'Edit', edit_mentorgroup_path(mentorgroup) %>
             <%= link_to 'Destroy', mentorgroup, method: :delete, data: { confirm: 'Are you sure?' } %>
           <%end%>
+          <%if  user_signed_in?%>
           <%if current_user.is_admin == true || (mentorgroup.user_id == current_user.id)%>
             <%= link_to 'Set member', editmember_mentorgroup_path(mentorgroup) %>
+          <%end%>
           <%end%>
           </br></br>
       <% end %>
     <%end%>
       </br>
     <br>
-    <%if current_user.is_admin?%>
+    <%if user_signed_in? &&  current_user.is_admin?%>
     <%= link_to 'New Mentorgroup', new_mentorgroup_path %>
     <%end%>
   </div>

@@ -26,6 +26,9 @@ gem 'jbuilder', '~> 2.5'
 # gem 'redis', '~> 3.0'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
+gem 'inherited_resources', github: 'activeadmin/inherited_resources'
+gem 'activeadmin', github: 'activeadmin'
+
 gem 'devise'
 gem 'ckeditor', '4.1.3'
 gem 'paperclip'
