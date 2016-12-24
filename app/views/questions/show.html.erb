@@ -1,6 +1,7 @@
 <section id="main">
   <div class="inner">
     <p id="notice"><%= notice %></p>
+    질문 평가 가능 기간 : <%= @can_qeval%>
 
     <%if (@is_super == true) %>
       <%= link_to "질문 할당하기",   category_question_aq_path(params[:category_id],params[:id]) %>
@@ -13,6 +14,18 @@
     <h1>제목 : <%=@question.title%></h1>
     <h3>내용 : </h3>
     <p> <%= raw @question.content%></p>
+    <%if user_signed_in?%>
+      <%if (@question.user.id == current_user.id) || (@is_super ==true) || (current_user.is_admin==true)%>
+        <%= link_to 'Edit', edit_category_question_path(params[:category_id],params[:id]) %> |
+        <%= link_to 'Delete', category_question_path(params[:category_id]),method: :delete %>
+        질문의 평가 평균 : <%=@qeval_avr%> | 표준편차 : <%=@qeval_dev%>
+      <%end%>
+    <%end%>
+    <%if @semi == true%>
+      <p>첨부파일 미리보기</p>
+      <iframe class="frame" src= "<%=@attachment%>" width="660"height="780"> </iframe>
+    <%end%>
+
     <%if @qeval != nil%>
       <h6>회원님의 평가점수 : <%= @qeval.ratepoint%> | 평균점수 : <%= @qeval_avr%></h6>
     <%end%>
@@ -57,13 +70,7 @@
     <%end%>
 
 
-    <%if user_signed_in?%>
-      <%if (@question.user.id == current_user.id) || (@is_super ==true) || (current_user.is_admin==true)%>
-        <%= link_to 'Edit', edit_category_question_path(params[:category_id],params[:id]) %> |
-        <%= link_to 'Delete', category_question_path(params[:category_id]),method: :delete %>
-        질문의 평가 평균 : <%=@qeval_avr%> | 표준편차 : <%=@qeval_dev%>
-      <%end%>
-    <%end%>
+
 
     <hr>
 
@@ -79,7 +86,6 @@
             <%if (a.user.id == current_user.id) || (@is_super ==true) || (current_user.is_admin==true)%>
               <%= link_to 'Edit', edit_question_heval_path(params[:id],a.id) %> |
               <%= link_to 'Delete', question_heval_path(params[:id],a.id), method: :delete %>
-              질문의 평가 평균 : <%=@heval_avr%> | 표준편차 : <%=@heval_dev%>
             <%end%>
           <%end%>
        <%end%>
@@ -93,9 +99,10 @@
       <% @question.answers.each_with_index do |a,c|%>
       <hr>
         <%d = c+1000000%>
+        답변 평가 가능 기간 : <%= (a.created_at + $due) > Time.now%>
         <p><%= raw a.content %></p>
         <%if user_signed_in?%>
-          <%if (a.user.id == current_user.id) || (@is_super ==true) || (current_user.is_admin==true)%>
+          <%if (a.user.id == current_user.id) || (current_user.is_admin==true)%>
             <% aeval_avr = a.aevals.average("ratepoint")%>
             <%       q5array = Array.new%>
             <%if(a.aevals.first != nil)%>
@@ -109,6 +116,19 @@
             <%= link_to 'Edit', edit_question_answer_path(params[:id],a.id) %> |
             <%= link_to 'Delete', question_answer_path(params[:id],a.id), method: :delete %>
             답변의 평가 평균 : <%=aeval_avr%> | 표준편차 : <%=aeval_dev%>
+          <%elsif @is_super == true%>
+            <% aeval_avr = a.aevals.average("ratepoint")%>
+            <%       q5array = Array.new%>
+            <%if(a.aevals.first != nil)%>
+              <%       a.aevals.each do |b| %>
+                <%         q5array.push(b.ratepoint)%>
+              <%end%>
+                <%if q5array.size >1%>
+                  <%  aeval_dev = q5array.stdev%>
+                <%end%>
+            <%end%>
+
+            답변의 평가 평균 : <%=aeval_avr%> | 표준편차 : <%=aeval_dev%>
           <%end%>
         <%end%>
         <%if a.aevals.where(answer_id: a.id).first != nil%>
@@ -116,7 +136,7 @@
         <%end%>
         <%if (a.created_at + $due) > Time.now%>
         <!-- 수정하기 넣어야함 -->
-          <% if  user_signed_in? && current_user.is_admin == false && @is_mentor==false && @is_super == false%>
+          <% if  user_signed_in? %>
             <%if user_signed_in? &&current_user.aevals.where(answer_id: a.id).first == nil %>
               <%= form_for [@question,a,a.aevals.new] do |f| %>
                 <div class="field">
@@ -161,11 +181,11 @@
       <%end%>
     <%end%>
 
-    <%if @can_qeval%>
     <hr>
-
       <%if user_signed_in?%>
-        <%if @is_mentor == true || @is_super == true %>
+        <%if @is_mentor == true || @is_super == true || current_user.is_admin == true %>
+        <%if @can_qeval%>
+
           <%= form_for [@question, @question.hevals.new] do |f| %>
             <h4>멘토님, 백점제 평가를 해주세요.</h4>
             <div class="field">
@@ -205,6 +225,7 @@
               <%= f.submit "작성하기", class: 'btn-lightgreen' %>
             </div>
           <%end%>
+          <%end%>
 
         <%else%>
           <%= form_for [@question, @question.answers.new] do |f| %>
@@ -218,7 +239,6 @@
           <%end%>
         <% end %>
       <%end%>
-    <%end%>
 
 
   </div>

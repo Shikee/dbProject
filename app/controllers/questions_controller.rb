@@ -6,6 +6,7 @@ class QuestionsController < ApplicationController
   before_action :set_qeval, only: [:show]
   before_action :set_qeval_info, only: [:show]
   before_action :set_category, only: [:show]
+  before_action :get_attachment, only: [:show]
 
 
   # GET /questions
@@ -121,10 +122,11 @@ class QuestionsController < ApplicationController
   # DELETE /questions/1
   # DELETE /questions/1.json
   def destroy
+    id = @question.category_id
     @question.destroy
     current_user.decrement!(:question_count,1)
 
-      redirect_to category_path, notice: 'Question was successfully destroyed.'
+      redirect_to category_path(id), notice: 'Question was successfully destroyed.'
 
   end
 
@@ -175,8 +177,25 @@ class QuestionsController < ApplicationController
       params.require(:question).permit(:title,:content)
     end
     def can_qeval
-      @can_qeval = (@question.created_at + $due) > Time.now
+      @can_qeval = (@question.created_at + 60*60*24) > Time.now
     end
+  
+    def get_attachment
+      @semi  = @question.content[/\">.*/]
+      if(@semi == nil)
+        @semi = false
+      else
+        @semi.slice!("\">")
+        @attachment = @semi.slice(0..(@semi.index("</a>")))
+        puts @attachment
+        index = @attachment.size
+        @attachment.slice!(index-1)
+        @semi = true
+      end
+    end
+
+
+
 
     def check
       @is_mentor = false
